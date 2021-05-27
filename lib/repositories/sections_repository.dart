@@ -5,7 +5,7 @@ import 'package:dashboard_magazan_casa/models/sections_model.dart';
 import 'package:http/http.dart' as http;
 
 class SectionsRepository {
-  Future<List<Sections>> get_all() async {
+  Future<List<Sections>> get() async {
     var response = await http.get(
         Uri.parse('http://localhost:3333/getallsections?department_cod=209'));
     List<Sections> sections;
