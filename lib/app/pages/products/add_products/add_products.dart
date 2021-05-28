@@ -2,7 +2,9 @@ import 'package:dashboard_magazan_casa/app/models/department.dart';
 import 'package:dashboard_magazan_casa/models/sections_model.dart';
 import 'package:dashboard_magazan_casa/repositories/departments_repository.dart';
 import 'package:dashboard_magazan_casa/repositories/sections_repository.dart';
+import 'package:dashboard_magazan_casa/stores/sections.store.dart';
 import 'package:flutter/material.dart';
+import 'dart:convert';
 
 class AddProducts extends StatefulWidget {
   @override
@@ -10,10 +12,16 @@ class AddProducts extends StatefulWidget {
 }
 
 class _AddProductsState extends State<AddProducts> {
-  var dropdownValue1 = 'FORNO E FOGAO';
+  var dropdownValue1;
   var dropdownValue = 'INFORMATICA';
-
+//Departments(id: 2, name: "INFORMATICA", cod: 203, imageUrl: 'imageUrl');
+  late Departments selectedDepartment;
   late List<Departments> departments;
+
+  var departmenstJson = [];
+  late int valueDepartment = 203;
+
+  final sectionStore = SectionStore();
 
   @override
   void initState() {
@@ -25,8 +33,7 @@ class _AddProductsState extends State<AddProducts> {
   Widget build(BuildContext context) {
     DepartmentsRepository departmentsRepository = DepartmentsRepository();
     SectionsRepository sectionsRepository = SectionsRepository();
-    List<String> departmentsNames = [];
-    List<String> sectionsNames = [];
+
     return Padding(
       padding: const EdgeInsets.all(18.0),
       child: Form(
@@ -66,9 +73,8 @@ class _AddProductsState extends State<AddProducts> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     snapshot.data!.forEach((element) {
-                      departmentsNames.add(element.name);
+                      departmenstJson.add(element);
                     });
-
                     return DropdownButton(
                       value: dropdownValue,
                       icon: const Icon(Icons.arrow_downward),
@@ -84,12 +90,28 @@ class _AddProductsState extends State<AddProducts> {
                       onChanged: (newValue) {
                         setState(() {
                           dropdownValue = newValue.toString();
+
+                          // valueDepartment = departmenstJson.firstWhere(
+                          //     (element) => element.name == dropdownValue);
+
+                          departmenstJson.forEach((element) {
+                            if (element.name == dropdownValue) {
+                              valueDepartment = element.cod;
+                            }
+                          });
+
+                          sectionStore.get_sections(valueDepartment);
+
+                          dropdownValue1 = 'FORNO E FOGAO';
+                          // selectedDepartment = newValue as Departments;
+                          print(valueDepartment);
+                          print(sectionStore.sections);
                         });
                       },
-                      items: departmentsNames.map((item) {
+                      items: snapshot.data!.map((item) {
                         return DropdownMenuItem(
-                          value: item,
-                          child: Text(item),
+                          value: item.name,
+                          child: Text(item.name),
                         );
                       }).toList(),
                     );
@@ -99,13 +121,13 @@ class _AddProductsState extends State<AddProducts> {
                   }
                   return CircularProgressIndicator();
                 }),
-            FutureBuilder<List<Sections>>(
-                future: sectionsRepository.get(),
+            /* FutureBuilder<List<Sections>>(
+                future: sectionsRepository.get(valueDepartment),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    snapshot.data!.forEach((element) {
-                      sectionsNames.add(element.name);
-                    });
+                    // snapshot.data!.forEach((element) {
+                    //   sectionsNames.add(element.name);
+                    // });
 
                     return DropdownButton(
                       value: dropdownValue1,
@@ -124,19 +146,20 @@ class _AddProductsState extends State<AddProducts> {
                           dropdownValue1 = newValue.toString();
                         });
                       },
-                      items: sectionsNames.map((item) {
+                      items: snapshot.data!.map((item) {
                         return DropdownMenuItem(
-                          value: item,
-                          child: Text(item),
+                          value: item.name,
+                          child: Text(item.name),
                         );
                       }).toList(),
                     );
-                  } else if (snapshot.hasError) {
+                  } else {
                     print(snapshot.connectionState);
+                    print('snapshot.connectionState');
                     return CircularProgressIndicator();
                   }
                   return CircularProgressIndicator();
-                }),
+                }), */
             new SizedBox(height: 15.0),
             new ElevatedButton(
               onPressed: () {},
