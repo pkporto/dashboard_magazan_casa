@@ -12,7 +12,7 @@ class AddProducts extends StatefulWidget {
 }
 
 class _AddProductsState extends State<AddProducts> {
-  var dropdownValue1;
+  var dropdownValue1 = 'EQUIPAMENTO INFORMATICA';
   var dropdownValue = 'INFORMATICA';
 //Departments(id: 2, name: "INFORMATICA", cod: 203, imageUrl: 'imageUrl');
   late Departments selectedDepartment;
@@ -27,13 +27,13 @@ class _AddProductsState extends State<AddProducts> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    sectionStore.get_sections(valueDepartment);
   }
 
   @override
   Widget build(BuildContext context) {
     DepartmentsRepository departmentsRepository = DepartmentsRepository();
     SectionsRepository sectionsRepository = SectionsRepository();
-
     return Padding(
       padding: const EdgeInsets.all(18.0),
       child: Form(
@@ -72,9 +72,13 @@ class _AddProductsState extends State<AddProducts> {
                 future: departmentsRepository.get(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    snapshot.data!.forEach((element) {
-                      departmenstJson.add(element);
-                    });
+                    if (snapshot.data!.length > 1) {
+                      snapshot.data!.forEach((element) {
+                        departmenstJson.add(element);
+                      });
+                    } else {
+                      departmenstJson.add(snapshot.data);
+                    }
                     return DropdownButton(
                       value: dropdownValue,
                       icon: const Icon(Icons.arrow_downward),
@@ -101,8 +105,6 @@ class _AddProductsState extends State<AddProducts> {
                           });
 
                           sectionStore.get_sections(valueDepartment);
-
-                          dropdownValue1 = 'FORNO E FOGAO';
                           // selectedDepartment = newValue as Departments;
                           print(valueDepartment);
                           print(sectionStore.sections);
@@ -121,9 +123,11 @@ class _AddProductsState extends State<AddProducts> {
                   }
                   return CircularProgressIndicator();
                 }),
-            /* FutureBuilder<List<Sections>>(
+            FutureBuilder<List<Sections>>(
                 future: sectionsRepository.get(valueDepartment),
                 builder: (context, snapshot) {
+                  dropdownValue1 = sectionStore.sections[0].name;
+
                   if (snapshot.hasData) {
                     // snapshot.data!.forEach((element) {
                     //   sectionsNames.add(element.name);
@@ -146,7 +150,7 @@ class _AddProductsState extends State<AddProducts> {
                           dropdownValue1 = newValue.toString();
                         });
                       },
-                      items: snapshot.data!.map((item) {
+                      items: sectionStore.sections.map((item) {
                         return DropdownMenuItem(
                           value: item.name,
                           child: Text(item.name),
@@ -158,8 +162,7 @@ class _AddProductsState extends State<AddProducts> {
                     print('snapshot.connectionState');
                     return CircularProgressIndicator();
                   }
-                  return CircularProgressIndicator();
-                }), */
+                }),
             new SizedBox(height: 15.0),
             new ElevatedButton(
               onPressed: () {},
