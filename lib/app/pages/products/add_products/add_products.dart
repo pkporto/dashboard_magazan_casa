@@ -1,6 +1,7 @@
 import 'package:dashboard_magazan_casa/app/models/department.dart';
 import 'package:dashboard_magazan_casa/models/sections_model.dart';
 import 'package:dashboard_magazan_casa/repositories/departments_repository.dart';
+import 'package:dashboard_magazan_casa/repositories/products_repository.dart';
 import 'package:dashboard_magazan_casa/repositories/sections_repository.dart';
 import 'package:dashboard_magazan_casa/stores/sections.store.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,7 @@ class AddProducts extends StatefulWidget {
 }
 
 class _AddProductsState extends State<AddProducts> {
-  var dropdownValue1 = 'EQUIPAMENTO INFORMATICA';
+  var sectionDropdown = 'EQUIPAMENTO INFORMATICA';
   var dropdownValue = 'INFORMATICA';
 //Departments(id: 2, name: "INFORMATICA", cod: 203, imageUrl: 'imageUrl');
   late Departments selectedDepartment;
@@ -21,6 +22,7 @@ class _AddProductsState extends State<AddProducts> {
   var departmenstJson = [];
   late int valueDepartment = 203;
 
+  ProductsRepository productsRepository = ProductsRepository();
   final sectionStore = SectionStore();
 
   @override
@@ -30,6 +32,16 @@ class _AddProductsState extends State<AddProducts> {
     sectionStore.get_sections(valueDepartment);
   }
 
+  final _formKey = GlobalKey<FormState>();
+
+  TextEditingController nameController = TextEditingController();
+  TextEditingController idRMSController = TextEditingController();
+  TextEditingController eanController = TextEditingController();
+  TextEditingController imageController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
+  TextEditingController inventoryController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     DepartmentsRepository departmentsRepository = DepartmentsRepository();
@@ -37,34 +49,84 @@ class _AddProductsState extends State<AddProducts> {
     return Padding(
       padding: const EdgeInsets.all(18.0),
       child: Form(
+        key: _formKey,
         child: Column(
           children: <Widget>[
             new TextFormField(
+              controller: nameController,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter some text';
+                }
+                return null;
+              },
               decoration: new InputDecoration(hintText: 'Nome do produto'),
               maxLength: 80,
             ),
             new TextFormField(
+              controller: idRMSController,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter some text';
+                }
+                return null;
+              },
               decoration: new InputDecoration(hintText: 'Id RMS'),
               keyboardType: TextInputType.phone,
               maxLength: 10,
             ),
             new TextFormField(
+                controller: eanController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  return null;
+                },
                 decoration: new InputDecoration(hintText: 'EAN'),
                 keyboardType: TextInputType.emailAddress,
                 maxLength: 40),
             new TextFormField(
+                controller: imageController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  return null;
+                },
                 decoration: new InputDecoration(hintText: 'Imagem'),
                 keyboardType: TextInputType.emailAddress,
                 maxLength: 40),
             new TextFormField(
+                controller: descriptionController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  return null;
+                },
                 decoration: new InputDecoration(hintText: 'Descrição'),
                 keyboardType: TextInputType.emailAddress,
                 maxLength: 40),
             new TextFormField(
+                controller: priceController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  return null;
+                },
                 decoration: new InputDecoration(hintText: 'Preço'),
                 keyboardType: TextInputType.emailAddress,
                 maxLength: 40),
             new TextFormField(
+                controller: inventoryController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  return null;
+                },
                 decoration: new InputDecoration(hintText: 'Estoque'),
                 keyboardType: TextInputType.emailAddress,
                 maxLength: 40),
@@ -126,7 +188,7 @@ class _AddProductsState extends State<AddProducts> {
             FutureBuilder<List<Sections>>(
                 future: sectionsRepository.get(valueDepartment),
                 builder: (context, snapshot) {
-                  dropdownValue1 = sectionStore.sections[0].name;
+                  sectionDropdown = sectionStore.sections[0].name;
 
                   if (snapshot.hasData) {
                     // snapshot.data!.forEach((element) {
@@ -134,7 +196,7 @@ class _AddProductsState extends State<AddProducts> {
                     // });
 
                     return DropdownButton(
-                      value: dropdownValue1,
+                      value: sectionDropdown,
                       icon: const Icon(Icons.arrow_downward),
                       iconSize: 24,
                       elevation: 16,
@@ -147,7 +209,7 @@ class _AddProductsState extends State<AddProducts> {
                       ),
                       onChanged: (newValue) {
                         setState(() {
-                          dropdownValue1 = newValue.toString();
+                          sectionDropdown = newValue.toString();
                         });
                       },
                       items: sectionStore.sections.map((item) {
@@ -165,7 +227,21 @@ class _AddProductsState extends State<AddProducts> {
                 }),
             new SizedBox(height: 15.0),
             new ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                productsRepository.add_product(
+                  nameController.text,
+                  idRMSController.text,
+                  int.parse(eanController.text),
+                  imageController.text,
+                  descriptionController.text,
+                  double.parse(priceController.text),
+                  'S',
+                  int.parse(inventoryController.text),
+                  1,
+                  241,
+                  208,
+                );
+              },
               child: new Text('Enviar'),
             )
           ],
@@ -173,4 +249,6 @@ class _AddProductsState extends State<AddProducts> {
       ),
     );
   }
+
+  void _validarCampos() {}
 }
