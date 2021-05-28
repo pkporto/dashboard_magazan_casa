@@ -4,13 +4,18 @@ class Sections {
   int cod;
   String imageUrl;
 
-  Sections({this.id, this.name, this.cod, this.imageUrl});
+  Sections(
+      {required this.id,
+      required this.name,
+      required this.cod,
+      required this.imageUrl});
 
-  Sections.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    cod = json['cod'];
-    imageUrl = json['image_url'];
+  factory Sections.fromJson(Map<String, dynamic> json) {
+    return Sections(
+        id: json['id'],
+        name: json['name'],
+        cod: json['cod'],
+        imageUrl: json['image_url']);
   }
 
   Map<String, dynamic> toJson() {

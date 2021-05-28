@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class EditProducts extends StatelessWidget {
-  const EditProducts({Key key}) : super(key: key);
+  // const EditProducts({required Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

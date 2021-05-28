@@ -81,9 +81,9 @@ class _AddProductsState extends State<AddProducts> {
                         height: 2,
                         color: Color.fromARGB(255, 31, 229, 146),
                       ),
-                      onChanged: (String newValue) {
+                      onChanged: (newValue) {
                         setState(() {
-                          dropdownValue = newValue;
+                          dropdownValue = newValue.toString();
                         });
                       },
                       items: departmentsNames.map((item) {
@@ -119,9 +119,9 @@ class _AddProductsState extends State<AddProducts> {
                         height: 2,
                         color: Color.fromARGB(255, 31, 229, 146),
                       ),
-                      onChanged: (String newValue) {
+                      onChanged: (newValue) {
                         setState(() {
-                          dropdownValue1 = newValue;
+                          dropdownValue1 = newValue.toString();
                         });
                       },
                       items: sectionsNames.map((item) {

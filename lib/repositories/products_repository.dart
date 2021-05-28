@@ -1,6 +1,8 @@
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:http/http.dart' as http;
 
 class ProductsRepository {
+  // ignore: non_constant_identifier_names
   Future add_product(
       String name,
       String idRMS,
@@ -12,17 +14,19 @@ class ProductsRepository {
       int store,
       int department,
       int section) async {
-    var resposta = await http.post(Uri.parse('http://localhost:3333/addProducts'),
-        body: {"name": name,
-          "idRMS": idRMS,
-          "ean": ean,
-          "image_url": image,
-          "description": description,
-          "price": price,
-          "inventory": inventory,
-          "store_id": store,
-          "department_cod": department,
-          "section_cod": section});
+    var resposta =
+        await http.post(Uri.parse('http://localhost:3333/addProducts'), body: {
+      "name": name,
+      "idRMS": idRMS,
+      "ean": ean,
+      "image_url": image,
+      "description": description,
+      "price": price,
+      "inventory": inventory,
+      "store_id": store,
+      "department_cod": department,
+      "section_cod": section
+    });
     print(resposta.statusCode);
     if (resposta.statusCode == 201) {
       return true;

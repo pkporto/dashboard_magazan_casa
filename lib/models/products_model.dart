@@ -1,4 +1,4 @@
-class products_model {
+class ProductsModel {
   String name;
   String idRMS;
   String ean;
@@ -10,29 +10,30 @@ class products_model {
   int departmentCod;
   int sectionCod;
 
-  products_model(
-      {this.name,
-        this.idRMS,
-        this.ean,
-        this.imageUrl,
-        this.description,
-        this.price,
-        this.inventory,
-        this.storeId,
-        this.departmentCod,
-        this.sectionCod});
+  ProductsModel(
+      {required this.name,
+      required this.idRMS,
+      required this.ean,
+      required this.imageUrl,
+      required this.description,
+      required this.price,
+      required this.inventory,
+      required this.storeId,
+      required this.departmentCod,
+      required this.sectionCod});
 
-  products_model.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    idRMS = json['idRMS'];
-    ean = json['ean'];
-    imageUrl = json['image_url'];
-    description = json['description'];
-    price = json['price'];
-    inventory = json['inventory'];
-    storeId = json['store_id'];
-    departmentCod = json['department_cod'];
-    sectionCod = json['section_cod'];
+  factory ProductsModel.fromJson(Map<String, dynamic> json) {
+    return ProductsModel(
+        name: json['name'],
+        idRMS: json['idRMS'],
+        ean: json['ean'],
+        imageUrl: json['image_url'],
+        description: json['description'],
+        price: json['price'],
+        inventory: json['inventory'],
+        storeId: json['store_id'],
+        departmentCod: json['department_cod'],
+        sectionCod: json['section_cod']);
   }
 
   Map<String, dynamic> toJson() {
